@@ -14,8 +14,9 @@ function viewDepartments() {
         if (err) {
             console.log(err);
         }
-        console.log('Departments');
+        console.log('\nDepartments');
         console.table(results);
+        console.log('\n\n\n');
     });
 };
 // viewDepartments();
@@ -27,8 +28,9 @@ function viewRoles() {
         if (err) {
             console.log(err);
         }
-        console.log('Employee roles')
+        console.log('\nEmployee roles')
         console.table(results);
+        console.log('\n\n\n');
     });
 }
 // viewRoles();
@@ -40,8 +42,9 @@ function viewEmployees() {
         if (err) {
             console.log(err);
         }
-        console.log('Employees');
+        console.log('\nEmployees');
         console.table(results);
+        console.log('\n\n\n');
     });
 }
 // viewEmployees();
@@ -72,10 +75,9 @@ function addDepartment() {
 // const departmentInput = "Warehouse";
 // addDepartment(departmentInput);
 
+
+
 // get department names from department table, set variable = to result, array.push into empty array, inquire prompt ask user for info, use created array for department list, compare user response to array and for loop through table where response = table.value, .then response return department.id and insert into employee_roll table
-
-// addRole(input) needs to be in the following format
-
 // WHEN I choose to add a role
 // THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
 function addRole() {
