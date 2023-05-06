@@ -16,7 +16,6 @@ function viewDepartments() {
         }
         console.log('\nDepartments');
         console.table(results);
-        console.log('\n\n\n');
     });
 };
 // viewDepartments();
@@ -30,7 +29,7 @@ function viewRoles() {
         }
         console.log('\nEmployee roles')
         console.table(results);
-        console.log('\n\n\n');
+        return results;
     });
 }
 // viewRoles();
@@ -44,15 +43,15 @@ function viewEmployees() {
         }
         console.log('\nEmployees');
         console.table(results);
-        console.log('\n\n\n');
+        return results;
     });
 }
 // viewEmployees();
 
 // WHEN I choose to add a department
 // THEN I am prompted to enter the name of the department and that department is added to the database
-function addDepartment() {
-    db.query(`SELECT name FROM department WHERE name = "${departmentInput}"`, (err, results) => {
+function addDepartment(input) {
+    db.query(`SELECT name FROM department WHERE name = "${input}"`, (err, results) => {
         if (err) {
             console.log(err);
         }
@@ -61,7 +60,7 @@ function addDepartment() {
                 console.log("Department already exists.");
             }
             else {
-                db.query(`INSERT INTO department (name) VALUES ("${departmentInput}")`, (err, results) => {
+                db.query(`INSERT INTO department (name) VALUES ("${input}")`, (err, results) => {
                     if (err) {
                         console.log(err);
                     }
@@ -80,8 +79,8 @@ function addDepartment() {
 // get department names from department table, set variable = to result, array.push into empty array, inquire prompt ask user for info, use created array for department list, compare user response to array and for loop through table where response = table.value, .then response return department.id and insert into employee_roll table
 // WHEN I choose to add a role
 // THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
-function addRole() {
-    db.query(`SELECT title FROM employee_role WHERE title = "${roleInput.title}"`, (err, results) => {
+function addRole(input) {
+    db.query(`SELECT title FROM employee_role WHERE title = "${input.title}"`, (err, results) => {
         if (err) {
             console.log(err);
         }
@@ -90,7 +89,7 @@ function addRole() {
                 console.log("Employee role already exists.");
             }
             else {
-                db.query(`INSERT INTO employee_role (title, salary, department_id) VALUES ("${roleInput.title}", ${roleInput.salary}, ${roleInput.department_id})`, (err, results) => {
+                db.query(`INSERT INTO employee_role (title, salary, department_id) VALUES ("${input.title}", ${input.salary}, ${input.department_id})`, (err, results) => {
                     if (err) {
                         console.log(err);
                     }
@@ -110,8 +109,8 @@ function addRole() {
 
 // WHEN I choose to add an employee
 // THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-function addEmployee() {
-    db.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES("${employeeInput.firstName}", "${employeeInput.lastName}", ${employeeInput.roleID}, ${employeeInput.manager})`, (err, results) => {
+function addEmployee(input) {
+    db.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES("${input.firstName}", "${input.lastName}", ${input.roleID}, ${input.manager})`, (err, results) => {
         if (err) {
             console.log(err);
         }
@@ -119,7 +118,7 @@ function addEmployee() {
         return results;
     });
 };
-// const employeeInput = {
+// const input = {
 //     firstName: "Craig",
 //     lastName: "Ferguson",
 //     roleID: "3",
@@ -129,8 +128,8 @@ function addEmployee() {
 
 // WHEN I choose to update an employee role
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
-function updateEmployee() {
-    db.query(`UPDATE employee SET role_id = ${updateInput.role_id} WHERE id = ${updateInput.id}`, (err, results) => {
+function updateEmployee(input) {
+    db.query(`UPDATE employee SET role_id = ${input.role_id} WHERE id = ${input.id}`, (err, results) => {
         if (err) {
             console.log(err);
         }
@@ -138,7 +137,7 @@ function updateEmployee() {
         return results;
     });
 }
-// const updateInput = {
+// const input = {
 //     role_id: '3',
 //     id: '1'
 // };
