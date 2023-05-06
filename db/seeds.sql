@@ -1,18 +1,18 @@
 USE employee_db;
 
-INSERT INTO department (id, name)
+INSERT INTO department (name)
 VALUES
-    (1, 'Sales'),
-    (2, 'Customer Service'),
-    (3, 'Marketing'),
-    (4, 'Manager');
+    ('Sales'),
+    ('Customer Service'),
+    ('Marketing'),
+    ('Manager');
 
-INSERT INTO employee_role (id, title, salary, department_id)
+INSERT INTO employee_role (title, salary, department_id)
 VALUES
-    (1, 'Sales Representative', 40000, 1),
-    (2, 'Manager', 55000, 4),
-    (3, 'Marketing Coordinator', 80000, 3),
-    (4, 'CS Representative', 35000, 2);
+    ('Sales Representative', 40000, 1),
+    ('Manager', 55000, 4),
+    ('Marketing Coordinator', 80000, 3),
+    ('CS Representative', 35000, 2);
  
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
 VALUES

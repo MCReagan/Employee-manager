@@ -23,16 +23,16 @@ const db = mysql.createConnection({
 
 // WHEN I choose to view all departments
 // THEN I am presented with a formatted table showing department names and department ids
-
-function viewDepartments() {
-    db.query('SELECT * FROM department', (err, results) => {
-        if (err) {
-            console.log(err);
-        }
-        console.table(results);
-    });
-};
-viewDepartments();
+// function viewDepartments() {
+//     db.query('SELECT * FROM department', (err, results) => {
+//         if (err) {
+//             console.log(err);
+//         }
+//         console.log('Department table');
+//         console.table(results);
+//     });
+// };
+// viewDepartments();
 
 // WHEN I choose to view all roles
 // THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
@@ -41,6 +41,7 @@ viewDepartments();
 //         if (err) {
 //             console.log(err);
 //         }
+//         console.log('employee_role table')
 //         console.table(results);
 //     });
 // }
@@ -50,7 +51,7 @@ viewDepartments();
 // WHEN I choose to view all employees
 // THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
 // function viewEmployees() {
-//     db.query('SELECT * FROM employee', (err, results) => {
+//     db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS name, employee_role.title, department.name AS department, employee_role.salary, employee.manager_id AS manager FROM employee JOIN employee_role ON employee_role.id = employee.role_id JOIN department ON department.id = employee_role.department_id', (err, results) => {
 //         if (err) {
 //             console.log(err);
 //         }
@@ -59,8 +60,43 @@ viewDepartments();
 // }
 // viewEmployees();
 
+
+
 // WHEN I choose to add a department
 // THEN I am prompted to enter the name of the department and that department is added to the database
+function addDepartment(input) {
+    db.query('USE employee_db', (err, results) => {
+        if (err) {
+            console.log(err);
+        } return results;
+    });
+    db.query(`SELECT name FROM department WHERE name = "${input}"`, (err, results) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            if (results.length > 0) {
+                console.log("Department already exists.");
+            }
+            else {
+                db.query(`INSERT INTO department (name) VALUES ("${input}")`, (err, results) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log("Department successfully added!");
+                    return results;
+                });
+            }
+        }
+    });
+};
+
+
+
+
+function addRole() {
+    // get department names from department table, set variable = to result, array.push into empty array, inquire prompt ask user for info, use created array for department list, compare user response to array and for loop through table where response = table.value, .then response return department.id and insert into employee_roll table
+}
 
 // WHEN I choose to add a role
 // THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
