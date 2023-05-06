@@ -28,7 +28,7 @@ const db = mysql.createConnection({
 //         if (err) {
 //             console.log(err);
 //         }
-//         console.log('Department table');
+//         console.log('Departments');
 //         console.table(results);
 //     });
 // };
@@ -41,7 +41,7 @@ const db = mysql.createConnection({
 //         if (err) {
 //             console.log(err);
 //         }
-//         console.log('employee_role table')
+//         console.log('Employee roles')
 //         console.table(results);
 //     });
 // }
@@ -55,6 +55,7 @@ const db = mysql.createConnection({
 //         if (err) {
 //             console.log(err);
 //         }
+//         console.log('Employees');
 //         console.table(results);
 //     });
 // }
@@ -64,42 +65,72 @@ const db = mysql.createConnection({
 
 // WHEN I choose to add a department
 // THEN I am prompted to enter the name of the department and that department is added to the database
-function addDepartment(input) {
+// function addDepartment(input) {
+//     db.query('USE employee_db', (err, results) => {
+//         if (err) {
+//             console.log(err);
+//         } return results;
+//     });
+//     db.query(`SELECT name FROM department WHERE name = "${input}"`, (err, results) => {
+//         if (err) {
+//             console.log(err);
+//         }
+//         else {
+//             if (results.length > 0) {
+//                 console.log("Department already exists.");
+//             }
+//             else {
+//                 db.query(`INSERT INTO department (name) VALUES ("${input}")`, (err, results) => {
+//                     if (err) {
+//                         console.log(err);
+//                     }
+//                     console.log("Department successfully added!");
+//                     return results;
+//                 });
+//             }
+//         }
+//     });
+// };
+
+
+
+
+
+// get department names from department table, set variable = to result, array.push into empty array, inquire prompt ask user for info, use created array for department list, compare user response to array and for loop through table where response = table.value, .then response return department.id and insert into employee_roll table
+const input = {
+    title: "CEO",
+    salary: "479000",
+    department_id: "3"
+};
+
+// WHEN I choose to add a role
+// THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
+function addRole() {
     db.query('USE employee_db', (err, results) => {
         if (err) {
             console.log(err);
         } return results;
     });
-    db.query(`SELECT name FROM department WHERE name = "${input}"`, (err, results) => {
+    db.query(`SELECT title FROM employee_role WHERE title = "${input.title}"`, (err, results) => {
         if (err) {
             console.log(err);
         }
         else {
             if (results.length > 0) {
-                console.log("Department already exists.");
+                console.log("Role already exists.");
             }
             else {
-                db.query(`INSERT INTO department (name) VALUES ("${input}")`, (err, results) => {
+                db.query(`INSERT INTO employee_role (title, salary, department_id) VALUES ("${input.title}", ${input.salary}, ${input.department_id})`, (err, results) => {
                     if (err) {
                         console.log(err);
                     }
-                    console.log("Department successfully added!");
+                    console.log("Role successfully added!");
                     return results;
                 });
             }
         }
-    });
-};
-
-
-
-
-function addRole() {
-    // get department names from department table, set variable = to result, array.push into empty array, inquire prompt ask user for info, use created array for department list, compare user response to array and for loop through table where response = table.value, .then response return department.id and insert into employee_roll table
+    })
 }
-
-// WHEN I choose to add a role
-// THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
 
 // WHEN I choose to add an employee
 // THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
