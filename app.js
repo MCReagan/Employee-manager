@@ -1,5 +1,11 @@
+const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+
+const app = express();
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -8,6 +14,7 @@ const db = mysql.createConnection({
     database: 'employee_db'
 });
 
+// wrap db.queries into functions so they can be called at will
 
 // use inquirer
 // WHEN I node index.js
@@ -33,3 +40,11 @@ const db = mysql.createConnection({
 
 // WHEN I choose to update an employee role
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
+
+app.use((req, res) => {
+    res.status(404).end();
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
