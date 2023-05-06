@@ -122,29 +122,39 @@ addRole(roleInput);
 
 // WHEN I choose to add an employee
 // THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+function addEmployee() {
+     db.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES("${employeeInput.firstName}", "${employeeInput.lastName}", ${employeeInput.roleID}, ${employeeInput.manager})`, (err, results) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log('Employee successfully added!')
+        return results;
+    });
+};
 const employeeInput = {
     firstName: "Craig",
     lastName: "Ferguson",
     roleID: "3",
     manager: "2"
 };
-function addEmployee() {
-    db.query('USE employee_db', (err, results) => {
-        if (err) {
-            console.log(err);
-        } return results;
-    });
-    db.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES("${employeeInput.firstName}", "${employeeInput.lastName}", ${employeeInput.roleID}, ${employeeInput.manager})`, (err, results) => {
-        if (err) {
-            console.log(err);
-        }
-        console.log('Employee successfully added!')
-    });
-};
 addEmployee(employeeInput);
 
 // WHEN I choose to update an employee role
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
+function updateEmployee() {
+    db.query(`UPDATE employee SET role_id = ${updateInput.role_id} WHERE id = ${updateInput.id}`, (err, results) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log('Employee successfully updated!')
+        return results;
+    });
+}
+const updateInput = {
+    role_id: '3',
+    id: '1'
+};
+updateEmployee(updateInput);
 
 app.use((req, res) => {
     res.status(404).end();
