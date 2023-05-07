@@ -14,20 +14,18 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`\nServer running on port ${PORT}\n`);
+    // console.log(`\nServer running on port ${PORT}\n`);
 });
 
-// WHEN I node app.js
-// THEN I am presented with the following inquirer list items: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
 function mainPrompt() {
     inquirer.prompt([
         {
             name: "do",
             type: "list",
-            message: "\nWhat do you want to do?",
+            message: "What do you want to do?",
             choices: ["View departments", "View roles", "View employees", "Add Department", "Add Role", "Add Employee", "Update Employee"]
         }
-    ]).then((answers) => {
+    ]).then(async (answers) => {
         switch (answers.do) {
             case "View departments":
                 return viewDepartments();
@@ -51,8 +49,6 @@ function mainPrompt() {
     });
 }
 
-// WHEN I choose to add a department
-// THEN I am prompted to enter the name of the department and that department is added to the database
 function addDepartmentPrompt() {
     inquirer.prompt([
         {
@@ -72,27 +68,27 @@ function addDepartmentPrompt() {
     });
 }
 
-// WHEN I choose to add a role
-// THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
-// function addRolePrompt() {
-//     inquirer.prompt([
-//         {
-//             name: "name",
-//             type: "input",
-//             message: "Enter the name of the new role."
-//         },
-//         {
-//             name: "firstName",
-//             type: "input",
-//             message: "Enter the new role's yearly salary. Use only whole numbers.",
-//             validate: function (value) {
-//                 var valid = !isNaN(parseFloat(value));
-//                 return valid || "Please enter a whole number without commas.";
-//             },
-//             filter: Number
-//         }
-//     ])
-// }
+function addRolePrompt() {
+    // inquirer.prompt([
+    //     {
+    //         name: "name",
+    //         type: "input",
+    //         message: "Enter the name of the new role."
+    //     },
+    //     {
+    //         name: "firstName",
+    //         type: "input",
+    //         message: "Enter the new role's yearly salary. Use only whole numbers.",
+    //         validate: function (value) {
+    //             var valid = !isNaN(parseFloat(value));
+    //             return valid || "Please enter a whole number without commas.";
+    //         },
+    //         filter: Number
+    //     },
+
+    // ])
+    console.log('\nbing\n')
+}
 
 // WHEN I choose to add an employee
 // THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
