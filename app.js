@@ -28,29 +28,37 @@ function mainPrompt() {
     ]).then(async (answers) => {
         switch (answers.do) {
             case "View departments":
-                return viewDepartments();
+                await viewDepartments();
+                break;
             case "View roles":
-                return viewRoles();
+                await viewRoles();
+                break;
             case "View employees":
-                return viewEmployees();
+                await viewEmployees();
+                break;
             case "Add Department":
-                return addDepartmentPrompt();
+                await addDepartmentPrompt();
+                break;
             case "Add Role":
-                return addRolePrompt();
+                await addRolePrompt();
+                break;
             case "Add Employee":
-                return addEmployeePrompt();
+                await addEmployeePrompt();
+                break;
             case "Update Employee":
-                return updateEmployeePrompt();
+                await updateEmployeePrompt();
+                break;
         }
+        return;
     }).catch((error) => {
         console.error(error);
-    }).finally(() => {
+    }).then(() => {
         return mainPrompt();
     });
 }
 
 function addDepartmentPrompt() {
-    inquirer.prompt([
+    return inquirer.prompt([
         {
             name: "department",
             type: "input",
@@ -61,12 +69,14 @@ function addDepartmentPrompt() {
         if (answers.department.length > 0) {
             return addDepartment(newDepartment);
         } else {
-            return console.log('\nError, you must not enter a blank field.\n')
+            console.log('\nError, you must not enter a blank field.\n');
+            return;
         }
     }).catch((error) => {
         console.error(error);
     });
 }
+
 
 function addRolePrompt() {
     // inquirer.prompt([
@@ -103,7 +113,3 @@ function updateEmployeePrompt() {
 }
 
 mainPrompt();
-
-
-
-
