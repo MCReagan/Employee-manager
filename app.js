@@ -1,7 +1,7 @@
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee } = require("./helpers/queries");
+const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments } = require("./helpers/queries");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -77,27 +77,54 @@ function addDepartmentPrompt() {
     });
 }
 
-
 function addRolePrompt() {
-    // inquirer.prompt([
-    //     {
-    //         name: "name",
-    //         type: "input",
-    //         message: "Enter the name of the new role."
-    //     },
-    //     {
-    //         name: "firstName",
-    //         type: "input",
-    //         message: "Enter the new role's yearly salary. Use only whole numbers.",
-    //         validate: function (value) {
-    //             var valid = !isNaN(parseFloat(value));
-    //             return valid || "Please enter a whole number without commas.";
-    //         },
-    //         filter: Number
-    //     },
-
-    // ])
-    console.log('\nbing\n')
+    return new Promise((resolve, reject) => {
+        getDepartments()
+            .then((results) => {
+                console.log('\n')
+                const choices = results.map((department) => {
+                    return {
+                        value: department.id,
+                        name: department.name
+                    };
+                })
+                inquirer.prompt([
+                    {
+                        name: "name",
+                        type: "input",
+                        message: "Enter the name of the new role."
+                    },
+                    {
+                        name: "salary",
+                        type: "input",
+                        message: "Enter the new role's yearly salary. Use only whole numbers.",
+                        validate: function (value) {
+                            var valid = !isNaN(parseFloat(value));
+                            return valid || "Please enter a whole number without commas.";
+                        },
+                        filter: Number
+                    },
+                    {
+                        name: "department_id",
+                        type: "list",
+                        message: "Choose a department to add the new role too.",
+                        choices: choices
+                    }
+                ]).then((answers) => {
+                    addRole(answers)
+                        .then(() => {
+                            resolve();
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+                reject();
+            });
+    });
 }
 
 // WHEN I choose to add an employee

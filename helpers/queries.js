@@ -77,21 +77,30 @@ function addDepartment(input) {
     });
 };
 
+function getDepartments() {
+    return new Promise((resolve, reject) => {
+        db.query(`SELECT * FROM department`, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
 
 function addRole(input) {
     return new Promise((resolve, reject) => {
-        db.query(`SELECT title FROM employee_role WHERE title = "${input.title}"`, (err, results) => {
+        db.query(`SELECT title FROM employee_role WHERE title = "${input.name}"`, (err, results) => {
             if (err) {
-                console.log(err);
                 reject(err);
             } else {
                 if (results.length > 0) {
                     console.log("\nEmployee role already exists.\n");
                     resolve();
                 } else {
-                    db.query(`INSERT INTO employee_role (title, salary, department_id) VALUES ("${input.title}", ${input.salary}, ${input.department_id})`, (err, results) => {
+                    db.query(`INSERT INTO employee_role (title, salary, department_id) VALUES ("${input.name}", ${input.salary}, ${input.department_id})`, (err, results) => {
                         if (err) {
-                            console.log(err);
                             reject(err);
                         } else {
                             console.log('\nEmployee role successfully added to the database!\n');
@@ -117,6 +126,7 @@ function addEmployee(input) {
         });
     });
 }
+
 function updateEmployee(input) {
     return new Promise((resolve, reject) => {
         db.query(`UPDATE employee SET role_id = ${input.role_id} WHERE id = ${input.id}`, (err, results) => {
@@ -131,5 +141,4 @@ function updateEmployee(input) {
     });
 }
 
-
-module.exports = { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee };
+module.exports = { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments };
