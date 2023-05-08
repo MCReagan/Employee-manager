@@ -1,7 +1,7 @@
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments } = require("./helpers/queries");
+const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles, returnManagerId } = require("./helpers/queries");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -130,7 +130,63 @@ function addRolePrompt() {
 // WHEN I choose to add an employee
 // THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
 function addEmployeePrompt() {
-    console.log('\nbing\n')
+    return new Promise((resolve, reject) => {
+        getRoles()
+            .then((results) => {
+                console.log('\n');
+                const choices = results.map((item) => item.title);
+                inquirer.prompt([
+                    {
+                        name: "first_name",
+                        type: "input",
+                        message: "Enter the first name of the new employee."
+                    },
+                    {
+                        name: "last_name",
+                        type: "input",
+                        message: "Enter the last name of the new employee."
+                    },
+                    {
+                        name: "title",
+                        type: "list",
+                        message: "Select the new employee's role.",
+                        choices: choices
+                    }
+                ]).then((answers) => {
+                    if (!answers.title.toLowerCase().includes('manager')){
+                        getManagers()
+                            .then((results) => {
+                                const managers = results.map((employee) => `${employee.first_name} ${employee.last_name}`);
+                                inquirer.prompt([
+                                    {
+                                        name: "manager_name",
+                                        type: "list",
+                                        message: "Select the new employee's manager.",
+                                        choices: managers
+                                    }
+                                ]).then((finalAnswers) => {
+                                    const employee = {
+                                        ...answers,
+                                        ...finalAnswers
+                                    };
+                                    console.log(employee)
+                                })
+                            })
+                    } else {
+                        answers["manager_name"] = null;
+                        console.log(answers);
+                    }
+                })  
+                    
+                    // {
+                    //     name: "manager_id",
+                    //     type: "list",
+                    //     message: "Select the employee's manager."
+                    // }
+                
+                // inquirer.prompt([])
+            })
+    })
 }
 
 // WHEN I choose to update an employee role

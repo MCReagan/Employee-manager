@@ -105,12 +105,43 @@ function addRole(input) {
                         } else {
                             console.log('\nEmployee role successfully added to the database!\n');
                             resolve();
+                            return results
                         }
                     });
                 }
             }
         });
     });
+}
+
+function getManagers() {
+    return new Promise((resolve, reject) => {
+        db.query(`SELECT * from employee WHERE manager_id IS NULL`, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        })
+    });
+}
+
+function getRoles() {
+    return new Promise((resolve, reject) => {
+        db.query(`SELECT title from employee_role`, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        })
+    })
+}
+
+function returnManagerId() {
+    return new Promise((resolve, reject) => {
+        
+    })
 }
 
 function addEmployee(input) {
@@ -141,4 +172,4 @@ function updateEmployee(input) {
     });
 }
 
-module.exports = { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments };
+module.exports = { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles, returnManagerId };
