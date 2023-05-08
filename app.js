@@ -1,6 +1,5 @@
 const express = require('express');
 const inquirer = require('inquirer');
-const mysql = require('mysql2');
 const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles, getEmployees, selectEmployee } = require("./helpers/queries");
 
 const PORT = process.env.PORT || 3001;
@@ -127,8 +126,6 @@ function addRolePrompt() {
     });
 }
 
-// WHEN I choose to add an employee
-// THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
 function addEmployeePrompt() {
     return new Promise((resolve, reject) => {
         getRoles()
@@ -210,8 +207,6 @@ function addEmployeePrompt() {
     })
 }
 
-// WHEN I choose to update an employee role
-// THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
 function updateEmployeePrompt() {
     return new Promise((resolve, reject) => {
         getEmployees().then((employees) => {
@@ -240,7 +235,6 @@ function updateEmployeePrompt() {
                             let roleName = role.role_name;
                             let employeeId = parseInt(name.employee_name.split(' ')[0]);
                             let roleId = roles.find((ele) => ele.title === role.role_name);
-                            // console.log(roleId.id, employeeId);
                             selectEmployee(employeeId).then((results) => {
                                 results[0].role_id = roleId.id;
                                 if (!roleName.toLowerCase().includes('manager')) {

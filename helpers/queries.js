@@ -187,7 +187,6 @@ function updateEmployee(input) {
 
 function selectEmployee(input) {
     return new Promise((resolve, reject) => {
-        console.log(input)
         db.query(`SELECT * FROM employee WHERE id = ${input}`, (err, results) => {
             if (err) {
                 reject(err);
