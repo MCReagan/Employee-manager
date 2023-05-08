@@ -1,7 +1,7 @@
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles } = require("./helpers/queries");
+const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles, getEmployees } = require("./helpers/queries");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -23,7 +23,7 @@ function mainPrompt() {
             name: "do",
             type: "list",
             message: "What do you want to do?",
-            choices: ["View departments", "View roles", "View employees", "Add Department", "Add Role", "Add Employee", "Update Employee"]
+            choices: ["View departments", "View roles", "View employees", "Add Department", "Add Role", "Add Employee", "Update Employee Role"]
         }
     ]).then(async (answers) => {
         switch (answers.do) {
@@ -45,7 +45,7 @@ function mainPrompt() {
             case "Add Employee":
                 await addEmployeePrompt();
                 break;
-            case "Update Employee":
+            case "Update Employee Role":
                 await updateEmployeePrompt();
                 break;
         }
@@ -172,11 +172,9 @@ function addEmployeePrompt() {
                                         ...answers,
                                         ...managers2[0]
                                     };
-                                    // console.log(employee)
-                                    // console.log(results)
                                     let checkFormat = results.map((role) => {
                                         if (employee.title === role.title) {
-                                        return { ...employee, role_id: role.id }
+                                            return { ...employee, role_id: role.id }
                                         }
                                     })
                                     checkFormat = checkFormat.filter((elem) => elem !== undefined);
@@ -210,13 +208,57 @@ function addEmployeePrompt() {
                 })
             })
     })
-
 }
 
 // WHEN I choose to update an employee role
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
 function updateEmployeePrompt() {
-    console.log('\nbing\n')
+    return new Promise((resolve, reject) => {
+        getEmployees().then((employees) => {
+            let fullNames = employees.map((employee) => `${employee.id} ${employee.first_name} ${employee.last_name}`);
+            return fullNames
+        }).then((fullNames) => {
+            inquirer.prompt([
+                {
+                    name: "employee_name",
+                    type: "list",
+                    message: "Select the employee that you would like to update.",
+                    choices: fullNames
+                }
+            ]).then((name) => {
+                getRoles()
+                    .then((roles) => {
+                        let allRoles = roles.map((role) => `${role.title}`)
+                        inquirer.prompt([
+                            {
+                                name: "role_name",
+                                type: "list",
+                                message: `Select the new role for ${name.employee_name}.`,
+                                choices: allRoles
+                            }
+                        ]).then((role) => {
+                            // console.log(roles)
+                            for (let el of roles) {
+                                if (el.title === role.role_name) {
+                                    getEmployees().then((employees) => {
+                                        for (ele of employees) {
+                                            
+                                            
+                                            if (ele.first_name){
+                                                console.log(employees.first_name)
+                                                console.log(ele.first_name)
+                                                console.log(ele)
+                                            }
+                                        }
+                                        // console.log(employees)
+                                    })
+                                }
+                            }
+                        })
+                    })
+            })
+        })
+    })
 }
 
 mainPrompt();

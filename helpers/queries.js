@@ -141,13 +141,34 @@ function getRoles() {
 function addEmployee(input) {
     return new Promise((resolve, reject) => {
         db.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES("${input.first_name}", "${input.last_name}", ${input.role_id}, ${input.manager_id})`, (err, results) => {
+            if (manager_id !== null) {
+                if (err) {
+                    reject(err);
+                } else {
+                    console.log('\nEmployee successfully added!\n');
+                    resolve(results);
+                }
+            } else {
+                if (err) {
+                    reject(err);
+                } else {
+                    console.log('\nManager successfully added!\n');
+                    resolve(results);
+                }
+            }
+        });
+    });
+}
+
+function getEmployees() {
+    return new Promise((resolve, reject) => {
+        db.query(`SELECT * FROM employee`, (err, results) => {
             if (err) {
                 reject(err);
             } else {
-                console.log('\nEmployee successfully added!\n');
-                resolve(results);
+                resolve(results)
             }
-        });
+        })
     });
 }
 
@@ -165,4 +186,4 @@ function updateEmployee(input) {
     });
 }
 
-module.exports = { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles };
+module.exports = { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles, getEmployees };
