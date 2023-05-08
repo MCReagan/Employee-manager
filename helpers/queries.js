@@ -174,16 +174,28 @@ function getEmployees() {
 
 function updateEmployee(input) {
     return new Promise((resolve, reject) => {
-        db.query(`UPDATE employee SET role_id = ${input.role_id} WHERE id = ${input.id}`, (err, results) => {
+        db.query(`UPDATE employee SET role_id = ${input.role_id}, manager_id = ${input.manager_id} WHERE id = ${input.id};`, (err, results) => {
             if (err) {
-                console.log(err);
                 reject(err);
             } else {
                 console.log('\nEmployee successfully updated!\n');
-                resolve();
+                resolve(results);
             }
-        });
+        })
     });
 }
 
-module.exports = { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles, getEmployees };
+function selectEmployee(input) {
+    return new Promise((resolve, reject) => {
+        console.log(input)
+        db.query(`SELECT * FROM employee WHERE id = ${input}`, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        })
+    })
+}
+
+module.exports = { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles, getEmployees, selectEmployee };

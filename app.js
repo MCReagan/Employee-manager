@@ -1,7 +1,7 @@
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles, getEmployees } = require("./helpers/queries");
+const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles, getEmployees, selectEmployee } = require("./helpers/queries");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -233,27 +233,23 @@ function updateEmployeePrompt() {
                             {
                                 name: "role_name",
                                 type: "list",
-                                message: `Select the new role for ${name.employee_name}.`,
+                                message: `Select the new role for: ${name.employee_name}.`,
                                 choices: allRoles
                             }
                         ]).then((role) => {
-                            // console.log(roles)
-                            for (let el of roles) {
-                                if (el.title === role.role_name) {
-                                    getEmployees().then((employees) => {
-                                        for (ele of employees) {
-                                            
-                                            
-                                            if (ele.first_name){
-                                                console.log(employees.first_name)
-                                                console.log(ele.first_name)
-                                                console.log(ele)
-                                            }
-                                        }
-                                        // console.log(employees)
-                                    })
+                            let roleName = role.role_name;
+                            let employeeId = parseInt(name.employee_name.split(' ')[0]);
+                            let roleId = roles.find((ele) => ele.title === role.role_name);
+                            // console.log(roleId.id, employeeId);
+                            selectEmployee(employeeId).then((results) => {
+                                results[0].role_id = roleId.id;
+                                if (!roleName.toLowerCase().includes('manager')) {
+                                    resolve(updateEmployee(results[0]))
+                                } else {
+                                    results[0].manager_id = null;
+                                    resolve(updateEmployee(results[0]))
                                 }
-                            }
+                            })
                         })
                     })
             })
