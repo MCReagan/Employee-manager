@@ -128,31 +128,24 @@ function getManagers() {
 
 function getRoles() {
     return new Promise((resolve, reject) => {
-        db.query(`SELECT title from employee_role`, (err, results) => {
+        db.query(`SELECT * from employee_role`, (err, results) => {
             if (err) {
                 reject(err);
             } else {
                 resolve(results);
             }
         })
-    })
-}
-
-function returnManagerId() {
-    return new Promise((resolve, reject) => {
-        
-    })
+    });
 }
 
 function addEmployee(input) {
     return new Promise((resolve, reject) => {
-        db.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES("${input.firstName}", "${input.lastName}", ${input.roleID}, ${input.manager})`, (err, results) => {
+        db.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES("${input.first_name}", "${input.last_name}", ${input.role_id}, ${input.manager_id})`, (err, results) => {
             if (err) {
-                console.log(err);
                 reject(err);
             } else {
                 console.log('\nEmployee successfully added!\n');
-                resolve();
+                resolve(results);
             }
         });
     });
@@ -172,4 +165,4 @@ function updateEmployee(input) {
     });
 }
 
-module.exports = { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles, returnManagerId };
+module.exports = { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles };

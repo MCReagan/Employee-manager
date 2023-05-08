@@ -1,7 +1,7 @@
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles, returnManagerId } = require("./helpers/queries");
+const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles } = require("./helpers/queries");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -153,10 +153,10 @@ function addEmployeePrompt() {
                         choices: choices
                     }
                 ]).then((answers) => {
-                    if (!answers.title.toLowerCase().includes('manager')){
+                    if (!answers.title.toLowerCase().includes('manager')) {
                         getManagers()
-                            .then((results) => {
-                                const managers = results.map((employee) => `${employee.first_name} ${employee.last_name}`);
+                            .then((managers1) => {
+                                let managers = managers1.map((employee) => `${employee.first_name} ${employee.last_name}`);
                                 inquirer.prompt([
                                     {
                                         name: "manager_name",
@@ -164,29 +164,53 @@ function addEmployeePrompt() {
                                         message: "Select the new employee's manager.",
                                         choices: managers
                                     }
-                                ]).then((finalAnswers) => {
-                                    const employee = {
+                                ]).then(() => {
+                                    let managers2 = managers1.map((result) => {
+                                        return { manager_id: result.id };
+                                    });
+                                    let employee = {
                                         ...answers,
-                                        ...finalAnswers
+                                        ...managers2[0]
                                     };
-                                    console.log(employee)
+                                    // console.log(employee)
+                                    // console.log(results)
+                                    let checkFormat = results.map((role) => {
+                                        if (employee.title === role.title) {
+                                        return { ...employee, role_id: role.id }
+                                        }
+                                    })
+                                    checkFormat = checkFormat.filter((elem) => elem !== undefined);
+                                    let final = {
+                                        first_name,
+                                        last_name,
+                                        role_id,
+                                        manager_id
+                                    } = checkFormat[0];
+                                    delete final.title;
+                                    resolve(addEmployee(final))
                                 })
                             })
                     } else {
-                        answers["manager_name"] = null;
-                        console.log(answers);
+                        answers["manager_id"] = null;
+                        let checkFormat = results.map((role) => {
+                            if (answers.title === role.title) {
+                                return { ...answers, role_id: role.id }
+                            }
+                        })
+                        checkFormat = checkFormat.filter((elem) => elem !== undefined);
+                        let final = {
+                            first_name,
+                            last_name,
+                            role_id,
+                            manager_id
+                        } = checkFormat[0];
+                        delete final.title;
+                        resolve(addEmployee(final));
                     }
-                })  
-                    
-                    // {
-                    //     name: "manager_id",
-                    //     type: "list",
-                    //     message: "Select the employee's manager."
-                    // }
-                
-                // inquirer.prompt([])
+                })
             })
     })
+
 }
 
 // WHEN I choose to update an employee role
