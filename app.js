@@ -13,10 +13,10 @@ app.use((req, res) => {
     res.status(404).end();
 });
 
-app.listen(PORT, () => {
-    // console.log(`\nServer running on port ${PORT}\n`);
+app.listen(PORT,  () => {
 });
 
+// function starts the app and opens the main list
 function mainPrompt() {
     inquirer.prompt([
         {
@@ -26,6 +26,7 @@ function mainPrompt() {
             choices: ["View departments", "View roles", "View employees", "Add Department", "Add Role", "Add Employee", "Update Employee Role"]
         }
     ]).then(async (answers) => {
+        // switch case runs functions depending on user selection
         switch (answers.do) {
             case "View departments":
                 await viewDepartments();
@@ -53,10 +54,12 @@ function mainPrompt() {
     }).catch((error) => {
         console.error(error);
     }).then(() => {
+        // function is started again, returning to main menu
         return mainPrompt();
     });
 }
 
+// function gathers information from user to add department and sends to helper function to make query call to db
 function addDepartmentPrompt() {
     return inquirer.prompt([
         {
@@ -77,6 +80,7 @@ function addDepartmentPrompt() {
     });
 }
 
+// function gathers information from user to add role and sends to helper function to make query call to db
 function addRolePrompt() {
     return new Promise((resolve, reject) => {
         getDepartments()
@@ -127,6 +131,7 @@ function addRolePrompt() {
     });
 }
 
+// function gathers information from user to add employee and sends to helper function to make query call to db
 function addEmployeePrompt() {
     return new Promise((resolve, reject) => {
         getRoles()
@@ -208,6 +213,7 @@ function addEmployeePrompt() {
     })
 }
 
+// function gathers information from user to update employee role and sends to helper function to make query call to db
 function updateEmployeePrompt() {
     return new Promise((resolve, reject) => {
         getEmployees().then((employees) => {
@@ -252,4 +258,5 @@ function updateEmployeePrompt() {
     })
 }
 
+// function is called once to initialize application
 mainPrompt();
