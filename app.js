@@ -1,5 +1,6 @@
 const express = require('express');
 const inquirer = require('inquirer');
+const table = require('console.table')
 const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateEmployee, getDepartments, getManagers, getRoles, getEmployees, selectEmployee } = require("./helpers/queries");
 
 const PORT = process.env.PORT || 3001;
